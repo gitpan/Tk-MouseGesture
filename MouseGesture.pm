@@ -6,7 +6,7 @@ use strict;
 use Tk;
 
 use vars qw/$VERSION/;
-$VERSION = 0.02;
+$VERSION = 0.03;
 
 Construct Tk::Widget 'MouseGesture';
 
@@ -52,8 +52,11 @@ sub new {
 
   # make sure the parent is a toplevel.
   unless ($parent->isa('Tk::Toplevel')) {
-    carp "Parent of $class must be a toplevel widget!";
-    return undef;
+    #carp "Parent of $class must be a toplevel widget!";
+    #    return undef;
+
+    # get the parent.
+    $parent = $parent->toplevel;
   }
 
   # make sure the gesture exists and is one that is known.
@@ -337,6 +340,9 @@ C<$mg = $top-E<gt>B<MouseGesture>(B<Gesture>, ?options?);>
 where C<Gesture> is one of the defined gestures, as described
 in L</"GESTURES">. The parent of a Tk::MouseGesture object has
 to be a Toplevel widget (Tk::MainWindow is a Toplevel).
+If the parent is not a Toplevel widget, then Tk::MouseGesture
+will figure out the Toplevel window that contains the parent,
+and assume that as its parent.
 The other options come in hash-value syntax,
 and are described below. The call to C<MouseGesture()> returns
 a Tk::MouseGesture object.
@@ -434,6 +440,14 @@ For now, only linear gesture are defined. These are:
 =item B3-left
 
 Click on the first, second or third button, and drag the mouse to the left.
+
+=item B1-right
+
+=item B2-right
+
+=item B3-right
+
+Click on the first, second or third button, and drag the mouse to the right.
 
 =item B1-up
 

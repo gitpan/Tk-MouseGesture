@@ -25,9 +25,11 @@ CONSTRUCTOR
 
     where "Gesture" is one of the defined gestures, as described in the
     section on "GESTURES". The parent of a Tk::MouseGesture object has to be
-    a Toplevel widget (Tk::MainWindow is a Toplevel). The other options come
-    in hash-value syntax, and are described below. The call to
-    "MouseGesture()" returns a Tk::MouseGesture object.
+    a Toplevel widget (Tk::MainWindow is a Toplevel). If the parent is not a
+    Toplevel widget, then Tk::MouseGesture will figure out the Toplevel
+    window that contains the parent, and assume that as its parent. The
+    other options come in hash-value syntax, and are described below. The
+    call to "MouseGesture()" returns a Tk::MouseGesture object.
 
     Valid options are:
 
@@ -97,6 +99,12 @@ GESTURES
     B3-left
         Click on the first, second or third button, and drag the mouse to
         the left.
+
+    B1-right
+    B2-right
+    B3-right
+        Click on the first, second or third button, and drag the mouse to
+        the right.
 
     B1-up
     B2-up
