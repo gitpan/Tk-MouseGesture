@@ -1,0 +1,6 @@
+Revision history for Perl extension Tk::MouseGesture.
+
+0.01  Mon Nov 24 15:27:09 2003
+	- original version; created by h2xs 1.21 with options
+		-AX -n Tk::MouseGesture
+
