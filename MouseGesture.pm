@@ -3,9 +3,10 @@ package Tk::MouseGesture;
 
 use Carp;
 use strict;
+use Tk;
 
 use vars qw/$VERSION/;
-$VERSION = 0.01;
+$VERSION = 0.02;
 
 Construct Tk::Widget 'MouseGesture';
 
@@ -98,6 +99,14 @@ sub addGesture {
   }
 
   $gestures{$gesture}->($self);
+}
+
+sub command {
+  my ($self, $sub) = @_;
+
+  $self->{SUB} = $sub if $sub;
+
+  return $self->{SUB};
 }
 
 sub _ges_b1_left { _generic_straight(1, -1, 0, @_) }
@@ -323,10 +332,12 @@ corresponding callback is called.
 
 A new mouse gesture binding can be created as follows:
 
-C<$mg = $top-E<gt>B<MouseGesture>(B<Gesture>, options);>
+C<$mg = $top-E<gt>B<MouseGesture>(B<Gesture>, ?options?);>
 
 where C<Gesture> is one of the defined gestures, as described
-in L</"GESTURES">. The other options come in hash-value syntax,
+in L</"GESTURES">. The parent of a Tk::MouseGesture object has
+to be a Toplevel widget (Tk::MainWindow is a Toplevel).
+The other options come in hash-value syntax,
 and are described below. The call to C<MouseGesture()> returns
 a Tk::MouseGesture object.
 
@@ -356,16 +367,31 @@ Defaults to 50 pixels.
 
 This defines the callback to be executed upon the successful
 completion of a gesture. It accepts any valid Tk Callback as
-defined in the L<Tk::Callbacks|Tk::Callbacks> docs. It defaults
-to an empty sub.
+defined in the L<Tk::Callbacks|Tk::Callbacks> pod. It defaults
+to an empty sub. You can modify it via the call to C<command()>
+as described in L</METHODS>.
 
 =back
+
+Note that there is no destructor. Currently, there is no way to
+destroy a Tk::MouseGesture object as this might delete any bindings
+to the parent widget set by the user. You can disable the recognition
+of a mouse gesture via a call to C<disable()> as described in
+L</METHODS>.
 
 =head1 METHODS
 
 The following methods are available:
 
 =over 4
+
+=item I<$mg>-E<gt>B<command>(?Callback?)
+
+This method allows you to modify the callback bound to the
+gesture object C<$mg>. It takes one optional argument which is
+a valid Tk Callback as defined in the L<Tk::Callbacks|Tk::Callbacks>
+pod. If no argument is given, then the currently bound callback is
+returned.
 
 =item I<$mg>-E<gt>B<disable>()
 
@@ -377,19 +403,21 @@ This enables the recognition of this particular gesture.
 
 =item I<$mg>-E<gt>B<disableAll>()
 
-This disables the recognition of all mouse gesture.
+This disables the recognition of all defined mouse gesture.
 
 =item I<$mg>-E<gt>B<enableAll>()
 
-This enables the recognition of all mouse gesture.
+This enables the recognition of all defined mouse gesture.
 
 =item I<$mg>-E<gt>B<addGesture>(Gesture)
 
 This adds another gesture binding. C<Gesture> has to be one of
 the defined gestures, as described in L</GESTURES>. The callback
 associated with this gesture is the same as that supplied during
-the constructor. To define another callback, you have to create
-a new Tk::MouseGesture object.
+the constructor (or set via a C<command()> call).
+This allows you to create multiple gesture definitions that are
+bound to the same callback. To define another callback, you have
+to create a new Tk::MouseGesture object.
 
 =back
 

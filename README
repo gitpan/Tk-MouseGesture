@@ -21,12 +21,13 @@ DESCRIPTION
 CONSTRUCTOR
     A new mouse gesture binding can be created as follows:
 
-    "$mg = $top->MouseGesture(Gesture, options);"
+    "$mg = $top->MouseGesture(Gesture, ?options?);"
 
     where "Gesture" is one of the defined gestures, as described in the
-    section on "GESTURES". The other options come in hash-value syntax, and
-    are described below. The call to "MouseGesture()" returns a
-    Tk::MouseGesture object.
+    section on "GESTURES". The parent of a Tk::MouseGesture object has to be
+    a Toplevel widget (Tk::MainWindow is a Toplevel). The other options come
+    in hash-value syntax, and are described below. The call to
+    "MouseGesture()" returns a Tk::MouseGesture object.
 
     Valid options are:
 
@@ -48,10 +49,24 @@ CONSTRUCTOR
     -command
         This defines the callback to be executed upon the successful
         completion of a gesture. It accepts any valid Tk Callback as defined
-        in the Tk::Callbacks docs. It defaults to an empty sub.
+        in the Tk::Callbacks pod. It defaults to an empty sub. You can
+        modify it via the call to "command()" as described in the METHODS
+        entry elsewhere in this document.
+
+    Note that there is no destructor. Currently, there is no way to destroy
+    a Tk::MouseGesture object as this might delete any bindings to the
+    parent widget set by the user. You can disable the recognition of a
+    mouse gesture via a call to "disable()" as described in the METHODS
+    entry elsewhere in this document.
 
 METHODS
     The following methods are available:
+
+    *$mg*->command(?Callback?)
+        This method allows you to modify the callback bound to the gesture
+        object "$mg". It takes one optional argument which is a valid Tk
+        Callback as defined in the Tk::Callbacks pod. If no argument is
+        given, then the currently bound callback is returned.
 
     *$mg*->disable()
         This disables the recognition of this particular gesture.
@@ -60,17 +75,19 @@ METHODS
         This enables the recognition of this particular gesture.
 
     *$mg*->disableAll()
-        This disables the recognition of all mouse gesture.
+        This disables the recognition of all defined mouse gesture.
 
     *$mg*->enableAll()
-        This enables the recognition of all mouse gesture.
+        This enables the recognition of all defined mouse gesture.
 
     *$mg*->addGesture(Gesture)
         This adds another gesture binding. "Gesture" has to be one of the
         defined gestures, as described in the GESTURES entry elsewhere in
         this document. The callback associated with this gesture is the same
-        as that supplied during the constructor. To define another callback,
-        you have to create a new Tk::MouseGesture object.
+        as that supplied during the constructor (or set via a "command()"
+        call). This allows you to create multiple gesture definitions that
+        are bound to the same callback. To define another callback, you have
+        to create a new Tk::MouseGesture object.
 
 GESTURES
     For now, only linear gesture are defined. These are:
